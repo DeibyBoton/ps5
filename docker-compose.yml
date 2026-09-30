@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  ps5-host:
+    build: .
+    container_name: ps5-self-host
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "53:53/udp"
+    volumes:
+      - ./payloads:/app/payloads

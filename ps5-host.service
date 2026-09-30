@@ -1,0 +1,14 @@
+[Unit]
+Description=PS5 Local Self-Host Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/tori/.gemini/antigravity/scratch/ps5-self-host
+ExecStart=/usr/bin/python3 /home/tori/.gemini/antigravity/scratch/ps5-self-host/server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
