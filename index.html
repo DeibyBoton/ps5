@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS5 Local Host Menu</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PS5 Host Panel</h1>
+            <p class="subtitle">Entorno local de autoalojamiento y carga de Homebrew</p>
+            <div id="status-bar" class="status online">Listo para conectar</div>
+        </header>
+
+        <section class="section">
+            <h2>1. Seleccionar Firmware</h2>
+            <div class="fw-selector">
+                <label for="fw-select">Versión instalada:</label>
+                <select id="fw-select">
+                    <option value="13.60">Firmware 13.60 (Relapse)</option>
+                    <option value="10.01">Firmware 10.01</option>
+                    <option value="8.00">Firmware 8.00</option>
+                    <option value="7.61">Firmware 7.61</option>
+                    <option value="4.51">Firmware 4.51 / 4.03</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>2. Payloads & Herramientas</h2>
+            <div class="grid">
+                <button class="card-btn" onclick="triggerPayload('etaHEN')">
+                    <span class="icon">⚡</span>
+                    <strong>etaHEN</strong>
+                    <small>Carga de homebrew, plugins y debug settings</small>
+                </button>
+                <button class="card-btn" onclick="triggerPayload('kstuff')">
+                    <span class="icon">📦</span>
+                    <strong>Kstuff</strong>
+                    <small>Soporte de fpkg y parches del kernel</small>
+                </button>
+                <button class="card-btn" onclick="triggerPayload('dumper')">
+                    <span class="icon">💾</span>
+                    <strong>App Dumper</strong>
+                    <small>Volcado de copias de seguridad a USB</small>
+                </button>
+                <button class="card-btn" onclick="triggerPayload('ftpserver')">
+                    <span class="icon">🌐</span>
+                    <strong>Servidor FTP</strong>
+                    <small>Transferencia de archivos vía puerto 1337</small>
+                </button>
+            </div>
+        </section>
+
+        <section class="section log-container">
+            <h2>Registro de Actividad</h2>
+            <pre id="log-output">Esperando acción del usuario...</pre>
+        </section>
+
+        <footer>
+            <small>Uso exclusivo en red local privada. Mantén siempre las actualizaciones automáticas desactivadas.</small>
+        </footer>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
