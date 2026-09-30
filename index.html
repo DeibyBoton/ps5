@@ -1,68 +1,288 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PS5 Local Host Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PS5 Host Center</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>PS5 Host Panel</h1>
-            <p class="subtitle">Entorno local de autoalojamiento y carga de Homebrew</p>
-            <div id="status-bar" class="status online">Listo para conectar</div>
+    <div class="app-shell">
+        <!-- Top Navigation -->
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-symbol">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </span>
+                <div class="brand-text">
+                    <h1>StationHub</h1>
+                    <span class="badge-tag" id="current-fw-badge">FW 13.60</span>
+                </div>
+            </div>
+
+            <div class="topbar-actions">
+                <div class="connectivity-pill" id="conn-pill" title="Estado de conexión local">
+                    <span class="dot"></span>
+                    <span class="text" id="conn-text">Conectado (Local)</span>
+                </div>
+                <button class="icon-btn" id="open-settings-btn" title="Configuración y Ayuda" aria-label="Ajustes">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+            </div>
         </header>
 
-        <section class="section">
-            <h2>1. Seleccionar Firmware</h2>
-            <div class="fw-selector">
-                <label for="fw-select">Versión instalada:</label>
-                <select id="fw-select">
-                    <option value="13.60">Firmware 13.60 (Relapse)</option>
-                    <option value="10.01">Firmware 10.01</option>
-                    <option value="8.00">Firmware 8.00</option>
-                    <option value="7.61">Firmware 7.61</option>
-                    <option value="4.51">Firmware 4.51 / 4.03</option>
-                </select>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Controls Bar: Firmware Selector & Filter -->
+            <div class="control-panel">
+                <div class="control-group">
+                    <label for="fw-select" class="control-label">Firmware destino</label>
+                    <div class="custom-select-wrapper">
+                        <select id="fw-select" class="custom-select">
+                            <option value="13.60" selected>13.60 (Relapse Chain)</option>
+                            <option value="10.01">10.01</option>
+                            <option value="9.60">9.60</option>
+                            <option value="8.00">8.00</option>
+                            <option value="7.61">7.61</option>
+                            <option value="4.51">4.51 / 4.03</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="search-box">
+                    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="tool-search" placeholder="Filtrar herramientas o payloads..." autocomplete="off">
+                </div>
             </div>
-        </section>
 
-        <section class="section">
-            <h2>2. Payloads & Herramientas</h2>
-            <div class="grid">
-                <button class="card-btn" onclick="triggerPayload('etaHEN')">
-                    <span class="icon">⚡</span>
-                    <strong>etaHEN</strong>
-                    <small>Carga de homebrew, plugins y debug settings</small>
-                </button>
-                <button class="card-btn" onclick="triggerPayload('kstuff')">
-                    <span class="icon">📦</span>
-                    <strong>Kstuff</strong>
-                    <small>Soporte de fpkg y parches del kernel</small>
-                </button>
-                <button class="card-btn" onclick="triggerPayload('dumper')">
-                    <span class="icon">💾</span>
-                    <strong>App Dumper</strong>
-                    <small>Volcado de copias de seguridad a USB</small>
-                </button>
-                <button class="card-btn" onclick="triggerPayload('ftpserver')">
-                    <span class="icon">🌐</span>
-                    <strong>Servidor FTP</strong>
-                    <small>Transferencia de archivos vía puerto 1337</small>
-                </button>
+            <!-- Categories Tabs -->
+            <nav class="category-nav" aria-label="Categorías">
+                <button class="nav-tab active" data-category="all">Todos</button>
+                <button class="nav-tab" data-category="core">Core & Kernel</button>
+                <button class="nav-tab" data-category="backup">Respaldos</button>
+                <button class="nav-tab" data-category="tools">Utilidades</button>
+            </nav>
+
+            <!-- Cards Grid -->
+            <div class="payloads-grid" id="payloads-grid">
+                <!-- etaHEN Card -->
+                <div class="card" data-id="etahen" data-category="core" tabindex="0">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                            </svg>
+                        </div>
+                        <span class="card-chip chip-highlight">Recomendado</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">etaHEN</h3>
+                        <p class="card-desc">Carga el entorno base de homebrew, parches de sistema, ajustes de depuración y soporte de plugins.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="meta-tag">v2.0b</span>
+                        <button class="action-btn" onclick="executePayload('etaHEN', 'core')">Ejecutar</button>
+                    </div>
+                </div>
+
+                <!-- Kstuff Card -->
+                <div class="card" data-id="kstuff" data-category="core" tabindex="0">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                        </div>
+                        <span class="card-chip">Kernel</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Kstuff</h3>
+                        <p class="card-desc">Habilita parches directos a nivel de kernel para soporte de paquetes fpkg y firmas personalizadas.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="meta-tag">Universal</span>
+                        <button class="action-btn" onclick="executePayload('kstuff', 'core')">Ejecutar</button>
+                    </div>
+                </div>
+
+                <!-- App Dumper Card -->
+                <div class="card" data-id="dumper" data-category="backup" tabindex="0">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                        </div>
+                        <span class="card-chip">Almacenamiento</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">App Dumper</h3>
+                        <p class="card-desc">Copia de seguridad y volcado limpio de títulos y aplicaciones instaladas hacia almacenamiento USB.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="meta-tag">USB / Direct</span>
+                        <button class="action-btn" onclick="executePayload('dumper', 'backup')">Ejecutar</button>
+                    </div>
+                </div>
+
+                <!-- FTP Server Card -->
+                <div class="card" data-id="ftp" data-category="tools" tabindex="0">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                        </div>
+                        <span class="card-chip">Puerto 1337</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Servidor FTP</h3>
+                        <p class="card-desc">Permite explorar el sistema de archivos de la consola y transferir datos desde tu ordenador cliente.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="meta-tag">Red Local</span>
+                        <button class="action-btn" onclick="executePayload('ftpserver', 'tools')">Ejecutar</button>
+                    </div>
+                </div>
+
+                <!-- Payload Custom Loader Card -->
+                <div class="card" data-id="custom" data-category="tools" tabindex="0">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <span class="card-chip">Manual</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Carga Manual (.bin)</h3>
+                        <p class="card-desc">Selecciona un archivo binario personalizado desde tu almacenamiento local o navegador.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="meta-tag">Custom ELF/BIN</span>
+                        <label class="action-btn" style="cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">
+                            Explorar
+                            <input type="file" id="custom-bin-input" accept=".bin,.elf" style="display:none;" onchange="handleCustomPayload(event)">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Cache Offline Card -->
+                <div class="card" data-id="cache" data-category="tools" tabindex="0">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                                <line x1="12" y1="2" x2="12" y2="12"></line>
+                            </svg>
+                        </div>
+                        <span class="card-chip">Almacenamiento</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Caché Offline</h3>
+                        <p class="card-desc">Guarda todo el host en la memoria interna de la consola para usarlo sin estar conectado a ninguna red.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="meta-tag" id="cache-status-tag">Activo</span>
+                        <button class="action-btn secondary" onclick="refreshCache()">Actualizar</button>
+                    </div>
+                </div>
             </div>
-        </section>
 
-        <section class="section log-container">
-            <h2>Registro de Actividad</h2>
-            <pre id="log-output">Esperando acción del usuario...</pre>
-        </section>
+            <!-- Activity Log Panel (Collapsible) -->
+            <section class="activity-section">
+                <div class="activity-header" onclick="toggleActivityLog()">
+                    <div class="activity-title">
+                        <span class="activity-indicator"></span>
+                        <h4>Registro de Eventos</h4>
+                    </div>
+                    <div class="activity-meta">
+                        <span id="log-count" class="count-tag">1 evento</span>
+                        <button class="text-btn" onclick="clearLogs(event)">Limpiar</button>
+                        <svg class="chevron" id="log-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <div class="activity-body" id="activity-body">
+                    <div class="log-stream" id="log-stream">
+                        <div class="log-entry info">
+                            <span class="time">00:00:00</span>
+                            <span class="msg">Panel de control inicializado correctamente.</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-        <footer>
-            <small>Uso exclusivo en red local privada. Mantén siempre las actualizaciones automáticas desactivadas.</small>
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Servidor privado de red local &bull; Diseñado para control D-Pad y navegación por cursor</p>
         </footer>
     </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-backdrop" id="settings-modal" style="display:none;" onclick="closeSettingsModal(event)">
+        <div class="modal-dialog" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3>Ajustes & Configuración Local</h3>
+                <button class="icon-btn" onclick="closeSettingsModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <div>
+                        <strong>Prevención de actualizaciones</strong>
+                        <p class="setting-desc">Asegúrate de que las actualizaciones automáticas estén deshabilitadas en la configuración de la PS5.</p>
+                    </div>
+                    <span class="status-badge safe">Recomendado</span>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <strong>Modo de caché del navegador</strong>
+                        <p class="setting-desc">Permite abrir el menú desde la Guía del Usuario incluso sin conexión a internet.</p>
+                    </div>
+                    <button class="action-btn secondary small" onclick="clearServiceWorkerCache()">Purgar Caché</button>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <strong>Servidor local</strong>
+                        <p class="setting-desc">Ejecutándose en puerto 8080 vía <code>server.py</code>.</p>
+                    </div>
+                    <button class="action-btn secondary small" onclick="checkLocalPing()">Probar Ping</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
 
     <script src="js/main.js"></script>
 </body>
