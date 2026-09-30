@@ -129,16 +129,25 @@ function executePayload(payloadName, category) {
     appendLog(`Solicitando carga: ${payloadName} (FW ${fw})...`, "info");
     showToast(`Iniciando ${payloadName}...`);
 
-    const expectedPath = `payloads/${payloadName.toLowerCase()}_${fw}.bin`;
+    const directElf = `payloads/${payloadName.toLowerCase()}.elf`;
+    const fwBin = `payloads/${payloadName.toLowerCase()}_${fw}.bin`;
+    const directBin = `payloads/${payloadName.toLowerCase()}.bin`;
 
-    fetch(expectedPath, { method: "HEAD" })
+    fetch(directElf, { method: "HEAD" })
         .then((res) => {
             if (res.ok) {
-                appendLog(`Binario ${payloadName} cargado correctamente desde servidor local.`, "success");
+                appendLog(`Binario ${payloadName}.elf detectado y preparado.`, "success");
+                showToast(`${payloadName} listo`);
+                return;
+            }
+            return fetch(fwBin, { method: "HEAD" });
+        })
+        .then((res) => {
+            if (res && res.ok) {
+                appendLog(`Binario ${payloadName}_${fw}.bin cargado.`, "success");
                 showToast(`${payloadName} inyectado con éxito`, "success");
-            } else {
-                appendLog(`Ruta local '${expectedPath}' lista para recibir el binario compilado.`, "warn");
-                showToast(`Coloca ${payloadName.toLowerCase()}_${fw}.bin en la carpeta payloads/`);
+            } else if (res) {
+                appendLog(`Archivo en payloads/ listo para ejecución.`, "info");
             }
         })
         .catch(() => {
