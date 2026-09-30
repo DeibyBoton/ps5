@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
+"""
+PS5 Local Host & Remote Injector Server
+Listens on Port 80 (standard HTTP requested by PS5 User's Guide) and 8080.
+Routes PlayStation User Guide paths (/document/...) to index.html.
+"""
+
 import http.server
 import socketserver
 import socket
 import json
 import os
+import sys
 
-PORT = 8080
+DEFAULT_PORT = 80
 
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -40,6 +47,12 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200)
         self.end_headers()
+
+    def do_GET(self):
+        # Redirect PS5 User Guide default paths (e.g. /document/es/ps5/index.html) to root index.html
+        if self.path.startswith('/document/') or self.path == '/':
+            self.path = '/index.html'
+        return super().do_GET()
 
     def do_POST(self):
         if self.path == '/api/verify-connection':
@@ -115,16 +128,27 @@ CustomHandler.extensions_map.update({
     '.elf': 'application/octet-stream',
 })
 
-print("=" * 60)
-print("        PS5 Local Host & Remote Injector Server")
-print("=" * 60)
-print(f"[*] Panel web en tu red local: http://{get_local_ip()}:{PORT}")
-print(f"[*] API de envío remoto TCP:   http://{get_local_ip()}:{PORT}/api/send-payload")
-print("=" * 60)
-print("Presiona Ctrl+C para detener el servidor.\n")
+def start_server(port=DEFAULT_PORT):
+    local_ip = get_local_ip()
+    print("=" * 60)
+    print("        PS5 Local Host & Remote Injector Server")
+    print("=" * 60)
+    print(f"[*] Escuchando en Puerto {port} (HTTP Estándar)")
+    print(f"[*] Panel web en red local:   http://{local_ip}")
+    print(f"[*] Enlace Guía de usuario:   http://manuals.playstation.net")
+    print("=" * 60)
+    print("Presiona Ctrl+C para detener el servidor.\n")
 
-with socketserver.TCPServer(("", PORT), CustomHandler) as httpd:
     try:
-        httpd.serve_forever()
+        with socketserver.TCPServer(("", port), CustomHandler) as httpd:
+            httpd.serve_forever()
+    except PermissionError:
+        print(f"[!] Error: El puerto {port} requiere permisos de administrador (root).")
+        print(f"[!] Ejecuta: sudo python3 server.py")
+        sys.exit(1)
     except KeyboardInterrupt:
-        print("\nServidor detenido correctamente.")
+        print("\n[*] Servidor detenido.")
+
+if __name__ == "__main__":
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_PORT
+    start_server(port)
