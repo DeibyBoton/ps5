@@ -223,29 +223,49 @@ function initModalControls() {
     });
 }
 
-function closeSettingsModal(event) {
-    const modal = document.getElementById("settings-modal");
+function openSenderModal() {
+    const modal = document.getElementById("sender-modal");
+    if (modal) modal.style.display = "flex";
+}
+
+function closeSenderModal(event) {
+    const modal = document.getElementById("sender-modal");
     if (modal) modal.style.display = "none";
 }
 
-// Keyboard & D-Pad Navigation Support (Accessibility on Consoles)
-function initSpatialNavigation() {
-    const focusableSelectors = '.card, .action-btn, .nav-tab, .custom-select, input, .icon-btn';
-    
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-            closeSettingsModal();
-        }
-    });
-}
+function sendRemotePayloadFromBrowser() {
+    const ip = document.getElementById("ps5-ip-input")?.value?.trim();
+    const port = document.getElementById("ps5-port-input")?.value?.trim() || "9020";
+    const file = document.getElementById("ps5-payload-select")?.value;
 
-// Service Worker Registration
-function initServiceWorker() {
-    if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("sw.js").catch(() => {
-            // SW registration silent fallback
-        });
+    if (!ip || ip === "192.168.1.") {
+        showToast("Ingresa la IP completa de la PS5");
+        return;
     }
+
+    appendLog(`Enviando ${file} a ${ip}:${port} vía API local...`, "info");
+    showToast(`Inyectando a ${ip}...`);
+
+    fetch("/api/send-payload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ip: ip, port: parseInt(port), file: file })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.ok) {
+            appendLog(`[OK] ${data.message} (${file})`, "success");
+            showToast("¡Payload enviado con éxito a la PS5!", "success");
+            closeSenderModal();
+        } else {
+            appendLog(`[Error] ${data.error || data.message}`, "error");
+            showToast(`Fallo: ${data.error || 'No se pudo conectar'}`);
+        }
+    })
+    .catch(err => {
+        appendLog(`[Aviso] Si estás en GitHub Pages online, usa la app de escritorio local (app_sender.py).`, "warn");
+        showToast("Usa server.py o app_sender.py para enviar por TCP");
+    });
 }
 
 // Helper
