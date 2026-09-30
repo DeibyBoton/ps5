@@ -233,6 +233,50 @@ function closeSenderModal(event) {
     if (modal) modal.style.display = "none";
 }
 
+function verifyConnectionFromBrowser() {
+    const ip = document.getElementById("ps5-ip-input")?.value?.trim();
+    const port = document.getElementById("ps5-port-input")?.value?.trim() || "9020";
+    const statusMsg = document.getElementById("sender-status-msg");
+
+    if (!ip || ip === "192.168.1.") {
+        showToast("Ingresa la IP completa de la PS5");
+        return;
+    }
+
+    if (statusMsg) {
+        statusMsg.textContent = `Comprobando conexión con ${ip}:${port}...`;
+        statusMsg.style.color = "var(--status-warn)";
+    }
+
+    fetch("/api/verify-connection", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ip: ip, port: parseInt(port) })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.ok) {
+            if (statusMsg) {
+                statusMsg.textContent = `✓ Conectado exitosamente con PS5 en ${ip}:${port}`;
+                statusMsg.style.color = "var(--status-online)";
+            }
+            showToast("IP verificada: Conexión con PS5 OK", "success");
+        } else {
+            if (statusMsg) {
+                statusMsg.textContent = `✗ Sin respuesta: ${data.error || 'Verifica el loader en la consola'}`;
+                statusMsg.style.color = "var(--status-error)";
+            }
+            showToast("No se pudo conectar con la IP indicada");
+        }
+    })
+    .catch(err => {
+        if (statusMsg) {
+            statusMsg.textContent = "Servidor local requerido para prueba directa. Usa app_sender.py";
+            statusMsg.style.color = "var(--text-muted)";
+        }
+    });
+}
+
 function sendRemotePayloadFromBrowser() {
     const ip = document.getElementById("ps5-ip-input")?.value?.trim();
     const port = document.getElementById("ps5-port-input")?.value?.trim() || "9020";

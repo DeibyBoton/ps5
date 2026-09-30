@@ -42,6 +42,29 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_POST(self):
+        if self.path == '/api/verify-connection':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
+            try:
+                data = json.loads(post_data.decode('utf-8'))
+                ps5_ip = data.get('ip')
+                port = int(data.get('port', 9020))
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.settimeout(3.5)
+                s.connect((ps5_ip, port))
+                s.close()
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": True, "message": f"Conexión exitosa con {ps5_ip}:{port}"}).encode())
+                return
+            except Exception as e:
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
+                return
+
         if self.path == '/api/send-payload':
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)

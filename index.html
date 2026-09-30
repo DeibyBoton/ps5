@@ -343,12 +343,16 @@
             <div class="modal-body">
                 <div class="control-group" style="flex-direction:column; align-items:flex-start; gap:6px;">
                     <label class="control-label" for="ps5-ip-input">Dirección IP de tu PS5:</label>
-                    <input type="text" id="ps5-ip-input" class="custom-select" style="width:100%;" placeholder="Ej. 192.168.1.150" value="192.168.1.">
+                    <div style="display:flex; gap:8px; width:100%;">
+                        <input type="text" id="ps5-ip-input" class="custom-select" style="flex:1;" placeholder="Ej. 192.168.1.150" value="192.168.1.">
+                        <button class="action-btn secondary small" onclick="verifyConnectionFromBrowser()">Probar IP</button>
+                    </div>
                 </div>
                 <div class="control-group" style="flex-direction:column; align-items:flex-start; gap:6px;">
                     <label class="control-label" for="ps5-port-input">Puerto de escucha:</label>
                     <input type="number" id="ps5-port-input" class="custom-select" style="width:100%;" value="9020">
                 </div>
+                <div id="sender-status-msg" style="font-size:12px; color:var(--text-muted);">Pulsa 'Probar IP' o 'Inyectar' para verificar.</div>
                 <div class="control-group" style="flex-direction:column; align-items:flex-start; gap:6px;">
                     <label class="control-label" for="ps5-payload-select">Seleccionar binario:</label>
                     <div class="custom-select-wrapper" style="width:100%;">
